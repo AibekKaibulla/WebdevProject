@@ -1,5 +1,3 @@
-from sys import prefix
-
 from django.db import models
 
 import uuid # unique ticket ids
@@ -51,7 +49,7 @@ class Event(models.Model):
 class Booking(models.Model):
     STATUS_CHOICES = (
         ('CONFIRMED', 'Confirmed'),
-        ('CANCELLED', 'Canceled'),
+        ('CANCELLED', 'Cancelled'),
     )
 
     # Booking -> User (Many-to-One)
@@ -82,7 +80,7 @@ class Booking(models.Model):
         return f"Booking {self.id} by {user_identifier} for {self.event.name}"
 
     class Meta:
-        ordering = ['-booking_time'] # date ASC
+        ordering = ['-booking_time'] # date DESC
 
 
 class Ticket(models.Model):
