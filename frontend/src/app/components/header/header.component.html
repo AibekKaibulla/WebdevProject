@@ -1,0 +1,28 @@
+<header class="bg-gray-800 text-white p-4">
+   <nav class="container mx-auto flex justify-between items-center">
+     <a routerLink="/" class="text-xl font-bold">not ticketon</a> 
+ 
+     <ul class="flex space-x-4">
+       <li><a routerLink="/" routerLinkActive="font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-gray-300">Home</a></li>
+       <li><a routerLink="/movies" routerLinkActive="font-bold" class="hover:text-gray-300">Movies</a></li>
+       <li><a routerLink="/concerts" routerLinkActive="font-bold" class="hover:text-gray-300">Concerts</a></li>
+     </ul>
+ 
+     <ul class="flex space-x-4 items-center">
+       <ng-container *ngIf="!(currentUser$ | async)">
+         <li><a routerLink="/login" routerLinkActive="font-bold" class="hover:text-gray-300">Login</a></li>
+         <li><a routerLink="/register" routerLinkActive="font-bold" class="hover:text-gray-300">Register</a></li>
+       </ng-container>
+ 
+       <ng-container *ngIf="currentUser$ | async as user">
+         <li><a routerLink="/my-bookings" routerLinkActive="font-bold" class="hover:text-gray-300">My Bookings</a></li>
+         <li class="text-sm text-gray-400">Welcome, {{ user.username }}!</li>
+         <li>
+           <button (click)="logout()" class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">
+             Logout
+           </button>
+         </li>
+       </ng-container>
+     </ul>
+   </nav>
+ </header>
