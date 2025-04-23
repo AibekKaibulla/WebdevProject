@@ -182,6 +182,30 @@ class EventDetailView(APIView):
             print(f"Unexpected error: {e}")
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class EventListByTypeView(generics.ListAPIView):
+    """
+    GET events filtered by type (movies, concerts, etc.)
+    """
+    serializer_class = EventSerializer
+    permission_classes = [AllowAny]
+
+    EVENT_TYPE_MAP = {
+        'movies': 'MOVIE',
+        'concerts': 'CONCERT',
+        'other': 'OTHER'
+    }
+
+    def get_queryset(self):
+        url_slug = self.kwargs.get('event_type_slug')
+
+        event_type_value = self.EVENT_TYPE_MAP.get(url_slug)
+
+        if event_type_value:
+            queryset = Event.objects.filter(event_type=event_type_value).order_by('date_time')
+        else:
+            queryset = Event.objects.none()
+
+        return queryset
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def booking_create_view(request):

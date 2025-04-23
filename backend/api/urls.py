@@ -13,6 +13,9 @@ urlpatterns = [
     # Event endpoints
     path('events/', views.EventListCreateView.as_view(), name='event-list-create'), # GET: List events, Post:Create event (Admin)
     path('events/<int:pk>', views.EventDetailView.as_view(), name='event-detail'), # GET: Retrieve, PUT/PATCH: Update, DELETE: Delete (Admin)
+    path('events/movies/', views.EventListByTypeView(), {'event_type_slug': 'movies'}, name='event-list-movies'),
+    path('events/concerts/', views.EventListByTypeView(), {'event_type_slug': 'concerts'}, name='event-list-concerts'),
+    path('events/others/', views.EventListByTypeView(), {'event_type_slug': 'others'}, name='event-list-other'),
 
     #Booking endpoints
     path('bookings/', views.booking_create_view, name='booking-create'), # POST: Create a new booking for logged-in user
