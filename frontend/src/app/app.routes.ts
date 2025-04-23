@@ -22,6 +22,11 @@ export const routes: Routes = [
     component: EventListComponent,
     data: { eventType: 'CONCERT' } 
   },
+  {
+    path: 'other',
+    component: EventListComponent,
+    data: { eventType: 'OTHER' } 
+  },
   { path: 'events/:id', component: EventDetailComponent }, 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
