@@ -6,7 +6,7 @@ from django.utils import timezone
 from rest_framework import status, serializers, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -187,7 +187,7 @@ class EventListByTypeView(generics.ListAPIView):
     GET events filtered by type (movies, concerts, etc.)
     """
     serializer_class = EventSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     EVENT_TYPE_MAP = {
         'movies': 'MOVIE',
