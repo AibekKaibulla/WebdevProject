@@ -1,0 +1,27 @@
+.card-custom {
+    width: 18rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    border-radius: 0.5rem;
+    padding:25px;
+    align-items: center;
+  }
+  
+  .card-custom .card-img-top {
+    object-fit: cover;
+    height: 200px;
+  }
+
+ul li{
+    list-style-type: none;
+    text-decoration:none;
+  }
+
+a.card-link {
+  display: inline-flex;
+  justify-content: space-between;
+  text-decoration: none;
+  padding: 0 8px;
+  word-spacing: 4px;
+  align-items: center;
+}

@@ -1,41 +1,52 @@
 <div class="container mx-auto mt-8 p-4">
-    <h2 class="text-3xl font-bold mb-6">{{ listTitle }}</h2>
-  
-    <div *ngIf="isLoading" class="text-center py-10">
-      <p>Loading events...</p>
-    </div>
-  
-    <div *ngIf="error && !isLoading" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-      <strong class="font-bold">Error:</strong>
-      <span class="block sm:inline"> {{ error }}</span>
-    </div>
-  
-    <!-- Event List -->
-    <div *ngIf="!isLoading && !error && (events$ | async) as events">
-      <div *ngIf="events.length > 0; else noEvents" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-  
-        <div *ngFor="let event of events" class="border rounded-lg shadow-md overflow-hidden bg-white">
-          <!-- <img src="https://via.placeholder.com/400x200?text={{event.event_type}}" alt="{{ event.name }}" class="w-full h-48 object-cover"> -->
-  
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2">{{ event.name }}</h3>
-            <p class="text-gray-600 text-sm mb-1">
-              <span class="font-medium">Date:</span> {{ event.date_time | date:'medium' }} <!-- Use Angular DatePipe -->
+  <h2 class="text-3xl font-bold mb-6">{{ listTitle }}</h2>
+
+  <div *ngIf="isLoading" class="text-center py-10">
+    <p>Loading events...</p>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="alert alert-danger mb-4" role="alert">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <div *ngIf="!isLoading && !error && (events$ | async) as events">
+    <div *ngIf="events.length > 0; else noEvents" class="row g-4">
+      <div *ngFor="let event of events" class="col-12 col-sm-6 col-lg-4">
+        <div class="card card-custom h-100">
+          <img [src]="'https://via.placeholder.com/400x200?text=Thirty Seconds to Mars в Алматы' + event.event_type"
+          [alt]="event.name" class="card-img-top">
+
+          <div class="card-body">
+            <h5 class="card-title">{{ event.name }}</h5>
+            <p class="card-text">
+              <small class="text-muted">
+                {{ event.date_time | date:'medium' }}
+              </small>
             </p>
-            <p class="text-gray-600 text-sm mb-3">
-              <span class="font-medium">Venue:</span> {{ event.venue_name }}
-            </p>
-            <a [routerLink]="['/events', event.id]" class="inline-block bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-              View Details
-            </a>
+          </div>
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <strong>Type:</strong> {{ event.event_type }}
+            </li>
+            <li class="list-group-item">
+              <strong>Venue:</strong> {{ event.venue_name }}
+            </li>
+          </ul>
+
+          <div class="card-body">
+            <a [routerLink]="['/events', event.id]" class="card-link">
+              View Details</a>
+            <a href="#" class="card-link">Register</a>
           </div>
         </div>
-  
       </div>
-  
-      <ng-template #noEvents>
-        <p class="text-center text-gray-500 py-10">No events found matching this category.</p>
-      </ng-template>
     </div>
-  
+
+    <ng-template #noEvents>
+      <p class="text-center text-muted py-10">
+        No events found matching this category.
+      </p>
+    </ng-template>
   </div>
+</div>
