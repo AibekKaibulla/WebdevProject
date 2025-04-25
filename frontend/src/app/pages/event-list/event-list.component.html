@@ -13,7 +13,7 @@
     <div *ngIf="events.length > 0; else noEvents" class="row g-4">
       <div *ngFor="let event of events" class="col-12 col-sm-6 col-lg-4">
         <div class="card card-custom h-100">
-          <img [src]="'https://via.placeholder.com/400x200?text=Thirty Seconds to Mars в Алматы' + event.event_type"
+          <img [src]="'' + event.event_type"
           [alt]="event.name" class="card-img-top">
 
           <div class="card-body">

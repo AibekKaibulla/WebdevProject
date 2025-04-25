@@ -1,30 +1,79 @@
-
 <div class="container mx-auto mt-8 p-4">
-    <div *ngIf="isLoading" class="text-center py-10">
-      <p>Loading event details...</p>
-    </div>
-  
-    <div *ngIf="error && !isLoading" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-      <strong class="font-bold">Error:</strong>
-      <span class="block sm:inline">{{ error }}</span>
-    </div>
-  
-    <div *ngIf="!isLoading && event">
-      <h2 class="text-3xl font-bold mb-4">{{ event.name }}</h2>
-      <p class="text-gray-600 mb-2"><span class="font-semibold">Date:</span> {{ formatDate(event.date_time) }}</p>
-      <p class="text-gray-600 mb-2"><span class="font-semibold">Venue:</span> {{ event.venue_name }}</p>
-      <p class="text-gray-600 mb-2"><span class="font-semibold">Address:</span> {{ event.address }}</p>
-      <p class="text-gray-600 mb-2"><span class="font-semibold">Ticket Price:</span> ${{ event.ticket_price }}</p>
-      <p class="text-gray-600 mb-2"><span class="font-semibold">Available Tickets:</span> {{ event.tickets_available }}</p>
-  
-      <p class="text-gray-700 mt-4">{{ event.description }}</p>
 
-      <button 
-      (click)="bookEvent()" 
-      [disabled]="isAlreadyBooked || event?.tickets_available === 0">
-      {{ isAlreadyBooked ? 'Tickets is already purchased' : event?.tickets_available === 0 ? 'tickets solded' : 'Sign up for an event' }}
-      </button>
-
-    </div>
+  <!-- Loading/Error State for Event -->
+  <div *ngIf="isLoadingEvent" class="text-center py-10">Loading event details...</div>
+  <div *ngIf="eventError && !isLoadingEvent" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+    <strong>Error:</strong> {{ eventError }}
   </div>
-  
+
+  <div *ngIf="!isLoadingEvent && !eventError && event">
+    <h2 class="text-3xl font-bold mb-4">{{ event.name }} ({{ event.event_type_display }})</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white p-6 rounded-lg shadow-md">
+      <div class="md:col-span-2">
+        <h3 class="text-xl font-semibold mb-2">Description</h3>
+        <p class="text-gray-700 whitespace-pre-wrap">{{ event.description }}</p>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold mb-2">Details</h3>
+        <p class="text-gray-700 mb-1"><strong>Date & Time:</strong> {{ event.date_time | date:'full' }}</p> <!-- Use DatePipe -->
+        <p class="text-gray-700 mb-1"><strong>Venue:</strong> {{ event.venue_name }}</p>
+        <p class="text-gray-700 mb-1"><strong>Address:</strong> {{ event.address }}</p>
+        <p class="text-gray-700 mb-1"><strong>Price:</strong> {{ event.ticket_price | currency:'USD' }}</p> <!-- Use CurrencyPipe -->
+        <p class="text-gray-700 mb-3"><strong>Tickets Available:</strong>
+           <span [class.text-red-600]="event.tickets_available === 0">{{ event.tickets_available }}</span> / {{ event.total_capacity }}
+        </p>
+
+        <hr class="my-4">
+
+        <div *ngIf="event.tickets_available > 0; else soldOut">
+            <!-- Show booking form ONLY if logged in -->
+            <div *ngIf="authService.currentUser$ | async; else loginPrompt">
+                <h3 class="text-lg font-semibold mb-2">Book Tickets</h3>
+                <div class="flex items-center space-x-3 mb-3">
+                    <label for="quantity" class="font-medium">Quantity:</label>
+                    <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    [max]="event.tickets_available" 
+                    [(ngModel)]="bookingQuantity"
+                    required
+                    class="w-20 shadow-sm appearance-none border rounded py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                </div>
+
+                <button
+                    (click)="bookEvent()"
+                    [disabled]="isBookingLoading || bookingQuantity <= 0 || bookingQuantity > event.tickets_available"
+                    class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <span *ngIf="!isBookingLoading">Book Now</span>
+                    <span *ngIf="isBookingLoading">Processing...</span>
+                </button>
+
+                <div *ngIf="bookingError" class="mt-3 text-red-600 text-sm">{{ bookingError }}</div>
+                <div *ngIf="bookingSuccess" class="mt-3 text-green-600 text-sm">{{ bookingSuccess }}</div>
+            </div>
+             <ng-template #loginPrompt>
+                  <p class="text-center mt-4">
+                     <a routerLink="/login" class="text-blue-600 hover:underline">Log in</a> to book tickets.
+                  </p>
+             </ng-template>
+        </div>
+
+        <ng-template #soldOut>
+            <p class="text-red-600 font-semibold">Sold Out!</p>
+        </ng-template>
+
+      </div>
+    </div> 
+  </div>
+
+   <div *ngIf="!isLoadingEvent && !event && !eventError" class="text-center py-10">
+      Event details could not be loaded or event not found.
+   </div>
+
+</div>
