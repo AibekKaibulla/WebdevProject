@@ -76,6 +76,7 @@ export class EventDetailComponent implements OnInit {
       if (eventData) {
         this.bookingQuantity = 1;
       }
+      this.isLoadingEvent = false;
       console.log('Setting isLoadingEvent to false in subscribe.'); 
     });
   }
